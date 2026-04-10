@@ -174,8 +174,9 @@
             try {
                 const response = await fetch(`/searchUser/${id}`);
                 if(response.ok && response.status === 200) {
-                    const user = await response.json();
-                    if(user) {
+                    const text = await response.text();
+                    if(text) {
+                        const user = JSON.parse(text);
                         const photoEl = document.getElementById('resPhoto');
                         if (user.dpUrl) {
                             photoEl.innerHTML = `<img src="${user.dpUrl}" alt="User Photo" style="width:80px; height:80px; border-radius:50%; object-fit:cover; border: 2px solid #0ea5e9;">`;
@@ -198,7 +199,7 @@
                         resultBox.style.display = 'none';
                     }
                 } else {
-                    messageEl.textContent = 'Failed to find user, or user does not exist.';
+                    messageEl.textContent = 'User not found.';
                     resultBox.style.display = 'none';
                 }
             } catch (error) {
