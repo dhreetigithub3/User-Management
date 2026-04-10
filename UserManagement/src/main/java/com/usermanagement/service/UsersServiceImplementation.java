@@ -20,14 +20,25 @@ public class UsersServiceImplementation implements UsersService {
 	}
 	
 	@Override
-	public String register(UsersRequestDto user) {
-		// TODO Auto-generated method stub
-		return null;
+	public String register(UsersRequestDto userDto) {
+		Users user = new Users();
+		user.setUsername(userDto.getUsername());
+		user.setEmail(userDto.getEmail());
+		user.setPassword(userDto.getPassword());
+		user.setMobile(userDto.getMobile());
+		user.setDob(userDto.getDob());
+		user.setGender(userDto.getGender());
+		user.setAddress(userDto.getAddress());
+		user.setDpUrl(userDto.getDpUrl());
+		
+		repo.save(user);
+		
+		return "User registered successfully!";
 	}
 
 	@Override
 	public UsersResponseDto searchUser(Long id) {
-		// TODO Auto-generated method stub
+		Users user = repo.findById(id).get();
 		return null;
 	}
 
