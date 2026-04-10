@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: #334155;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            color: #64748b;
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.2s;
+        }
+
+        .back-btn:hover {
+            color: #4f46e5;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: #64748b;
+        }
+
+        .options-container {
+            display: flex;
+            gap: 24px;
+            max-width: 1000px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .option-card {
+            background-color: #ffffff;
+            width: 280px;
+            padding: 30px 20px;
+            border-radius: 20px;
+            text-align: center;
+            text-decoration: none;
+            color: inherit;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid #e2e8f0;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .option-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #4f46e5;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .option-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.1);
+            border-color: transparent;
+        }
+
+        .option-card:hover::before {
+            opacity: 1;
+        }
+
+        .icon-circle {
+            width: 70px;
+            height: 70px;
+            background-color: #f1f5f9;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 1.75rem;
+            color: #4f46e5;
+            transition: all 0.3s ease;
+        }
+
+        /* Specific Icon Colors on hover */
+        .card-view:hover .icon-circle {
+            background-color: #4f46e5;
+            color: #fff;
+        }
+
+        .card-search:hover .icon-circle {
+            background-color: #0ea5e9;
+            color: #fff;
+        }
+
+        .card-add:hover .icon-circle {
+            background-color: #10b981;
+            color: #fff;
+        }
+
+        .card-update:hover .icon-circle {
+            background-color: #f59e0b;
+            color: #fff;
+        }
+
+        .card-delete:hover .icon-circle {
+            background-color: #ef4444;
+            color: #fff;
+        }
+
+        .card-view::before {
+            background: #4f46e5;
+        }
+
+        .card-search::before {
+            background: #0ea5e9;
+        }
+
+        .card-add::before {
+            background: #10b981;
+        }
+
+        .card-update::before {
+            background: #f59e0b;
+        }
+
+        .card-delete::before {
+            background: #ef4444;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 10px;
+        }
+
+        .card-desc {
+            font-size: 0.9rem;
+            color: #64748b;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <h1>User Management</h1>
+        <p>Select an action to manage users</p>
+    </div>
+
+    <div class="options-container">
+
+        <!-- View All Users -->
+        <a href="view-users.html" class="option-card card-view">
+            <div class="icon-circle">
+                <i class="fa-solid fa-users"></i>
+            </div>
+            <h2 class="card-title">View All Users</h2>
+            <p class="card-desc">Browse through the complete list of registered users.</p>
+        </a>
+
+        <!-- Search User -->
+        <a href="search-user.html" class="option-card card-search">
+            <div class="icon-circle">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </div>
+            <h2 class="card-title">Search User</h2>
+            <p class="card-desc">Find specific users using their ID, name, or email.</p>
+        </a>
+
+        <!-- Add New User -->
+        <a href="add-user.html" class="option-card card-add">
+            <div class="icon-circle">
+                <i class="fa-solid fa-user-plus"></i>
+            </div>
+            <h2 class="card-title">Add New User</h2>
+            <p class="card-desc">Create and add new users to the system.</p>
+        </a>
+
+        <!-- Update User -->
+        <a href="update-user.html" class="option-card card-update">
+            <div class="icon-circle">
+                <i class="fa-solid fa-user-pen"></i>
+            </div>
+            <h2 class="card-title">Update User</h2>
+            <p class="card-desc">Modify details, roles, or status of existing users.</p>
+        </a>
+
+        <!-- Delete User -->
+        <a href="delete-user.html" class="option-card card-delete">
+            <div class="icon-circle">
+                <i class="fa-solid fa-user-minus"></i>
+            </div>
+            <h2 class="card-title">Delete User</h2>
+            <p class="card-desc">Remove disabled or unwanted user accounts from the system.</p>
+        </a>
+
+    </div>
+
+</body>
+
+</html>

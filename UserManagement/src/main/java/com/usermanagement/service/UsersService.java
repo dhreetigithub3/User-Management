@@ -4,13 +4,17 @@ import java.util.List;
 
 import com.usermanagement.dto.UsersRequestDto;
 import com.usermanagement.dto.UsersResponseDto;
-import com.usermanagement.entity.Users;
+import com.usermanagement.dto.UsersUpdateRequestDto;
 
 public interface UsersService {
 	
-	String register(UsersRequestDto user);
+	String register(UsersRequestDto userDto);
+	
 	UsersResponseDto searchUser(Long id);
+	
 	List<UsersResponseDto> viewAllUsers();
-	String updateUser(Users user);
+	
+	UsersResponseDto updateUser(UsersUpdateRequestDto userDto);
+	
 	String deleteUser(Long id);
 }
