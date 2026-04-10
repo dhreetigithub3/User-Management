@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search User</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: #334155;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            color: #64748b;
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.2s;
+        }
+
+        .back-btn:hover {
+            color: #0ea5e9;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 48px;
+            margin-top: 20px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 8px;
+        }
+
+        .container {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 600px;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #475569;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            border-color: #0ea5e9;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #0ea5e9;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #0284c7;
+        }
+
+        #resultBox {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f1f5f9;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .result-item {
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+        
+        .result-item strong {
+            color: #1e293b;
+        }
+
+        #message {
+            margin-top: 15px;
+            text-align: center;
+            font-weight: 500;
+            color: #ef4444;
+        }
+    </style>
+</head>
+<body>
+    <a href="users_manage.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Management</a>
+    <div class="header">
+        <h1>Search User</h1>
+        <p>Find user by User ID</p>
+    </div>
+    <div class="container">
+        <div class="form-group">
+            <label for="searchId">Enter User ID</label>
+            <input type="number" id="searchId" placeholder="e.g. 1">
+        </div>
+        <button type="button" id="searchBtn">Search</button>
+
+        <div id="message"></div>
+
+        <div id="resultBox">
+            <h3 style="margin-bottom: 15px; color: #0f172a;">User Details</h3>
+            <div id="resPhoto" style="margin-bottom: 15px;"></div>
+            <div class="result-item"><strong>ID:</strong> <span id="resId"></span></div>
+            <div class="result-item"><strong>Username:</strong> <span id="resUsername"></span></div>
+            <div class="result-item"><strong>Email:</strong> <span id="resEmail"></span></div>
+            <div class="result-item"><strong>Mobile:</strong> <span id="resMobile"></span></div>
+            <div class="result-item"><strong>DOB:</strong> <span id="resDob"></span></div>
+            <div class="result-item"><strong>Gender:</strong> <span id="resGender"></span></div>
+            <div class="result-item"><strong>Address:</strong> <span id="resAddress"></span></div>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('searchBtn').addEventListener('click', async function() {
+            const id = document.getElementById('searchId').value;
+            const messageEl = document.getElementById('message');
+            const resultBox = document.getElementById('resultBox');
+
+            if(!id) {
+                messageEl.textContent = 'Please enter an ID.';
+                resultBox.style.display = 'none';
+                return;
+            }
+
+            try {
+                const response = await fetch(`/searchUser/${id}`);
+                if(response.ok && response.status === 200) {
+                    const user = await response.json();
+                    if(user) {
+                        const photoEl = document.getElementById('resPhoto');
+                        if (user.dpUrl) {
+                            photoEl.innerHTML = `<img src="${user.dpUrl}" alt="User Photo" style="width:80px; height:80px; border-radius:50%; object-fit:cover; border: 2px solid #0ea5e9;">`;
+                        } else {
+                            photoEl.innerHTML = '<div style="width:80px; height:80px; border-radius:50%; background-color:#e2e8f0; display:flex; align-items:center; justify-content:center; border: 2px solid #0ea5e9;"><i class="fa-solid fa-user" style="font-size:2rem; color:#94a3b8;"></i></div>';
+                        }
+                        
+                        document.getElementById('resId').textContent = user.id;
+                        document.getElementById('resUsername').textContent = user.username;
+                        document.getElementById('resEmail').textContent = user.email;
+                        document.getElementById('resMobile').textContent = user.mobile;
+                        document.getElementById('resDob').textContent = user.dob;
+                        document.getElementById('resGender').textContent = user.gender;
+                        document.getElementById('resAddress').textContent = user.address;
+                        
+                        resultBox.style.display = 'block';
+                        messageEl.textContent = '';
+                    } else {
+                        messageEl.textContent = 'User not found.';
+                        resultBox.style.display = 'none';
+                    }
+                } else {
+                    messageEl.textContent = 'Failed to find user, or user does not exist.';
+                    resultBox.style.display = 'none';
+                }
+            } catch (error) {
+                console.error(error);
+                messageEl.textContent = 'An error occurred during search.';
+                resultBox.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update User</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: #334155;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            color: #64748b;
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.2s;
+        }
+
+        .back-btn:hover {
+            color: #f59e0b;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 48px;
+            margin-top: 20px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 8px;
+        }
+
+        .container {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 600px;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            flex: 1;
+        }
+
+        .form-group.full {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #475569;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #f59e0b;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #f59e0b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #d97706;
+        }
+
+        .search-section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        #updateUserForm {
+            display: none;
+            /* hidden until user is fetched */
+        }
+
+        #message {
+            margin-top: 15px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .success {
+            color: #10b981;
+        }
+
+        .error {
+            color: #ef4444;
+        }
+    </style>
+</head>
+
+<body>
+    <a href="users_manage.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Management</a>
+    <div class="header">
+        <h1>Update User</h1>
+        <p>Modify existing user details</p>
+    </div>
+    <div class="container">
+        <div class="search-section form-group full">
+            <label for="searchId">User ID to Update</label>
+            <div style="display: flex; gap: 10px;">
+                <input type="number" id="searchId" placeholder="Enter ID">
+                <button type="button" id="fetchBtn" style="width: auto; margin-top: 0;">Fetch User</button>
+            </div>
+        </div>
+
+        <form id="updateUserForm">
+            <input type="hidden" id="userId">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="password">Password (Optional)</label>
+                    <input type="password" id="password" placeholder="Leave blank to keep current">
+                </div>
+                <div class="form-group">
+                    <label for="mobile">Mobile Number</label>
+                    <input type="text" id="mobile" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="dob">Date of Birth</label>
+                    <input type="date" id="dob" required>
+                </div>
+                <div class="form-group">
+                    <label for="gender">Gender</label>
+                    <select id="gender" required>
+                        <option value="MALE">Male</option>
+                        <option value="FEMALE">Female</option>
+                        <option value="OTHER">Other</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group full">
+                <label for="dpUrl">Profile Picture URL</label>
+                <input type="text" id="dpUrl">
+            </div>
+            <div class="form-group full">
+                <label for="address">Address</label>
+                <textarea id="address" rows="3" required></textarea>
+            </div>
+
+            <button type="submit">Save Changes</button>
+        </form>
+        <div id="message"></div>
+    </div>
+
+    <script>
+        document.getElementById('fetchBtn').addEventListener('click', async function () {
+            const id = document.getElementById('searchId').value;
+            const messageEl = document.getElementById('message');
+            const form = document.getElementById('updateUserForm');
+
+            if (!id) {
+                messageEl.textContent = 'Please enter user ID.';
+                messageEl.className = 'error';
+                return;
+            }
+
+            messageEl.textContent = 'Searching...';
+            messageEl.className = '';
+            form.style.display = 'none';
+
+            try {
+                const response = await fetch(`/searchUser/${id}`);
+                if (response.ok && response.status === 200) {
+                    const user = await response.json();
+                    if (user) {
+                        document.getElementById('userId').value = user.id;
+                        document.getElementById('username').value = user.username || '';
+                        document.getElementById('email').value = user.email || '';
+                        document.getElementById('password').value = user.password || '';
+                        document.getElementById('mobile').value = user.mobile || '';
+                        document.getElementById('dob').value = user.dob || '';
+                        document.getElementById('gender').value = user.gender || 'MALE';
+                        document.getElementById('dpUrl').value = user.dpUrl || '';
+                        document.getElementById('address').value = user.address || '';
+                        form.style.display = 'block';
+                        messageEl.textContent = '';
+                    } else {
+                        messageEl.textContent = 'User not found.';
+                        messageEl.className = 'error';
+                    }
+                } else {
+                    messageEl.textContent = 'Failed to fetch user.';
+                    messageEl.className = 'error';
+                }
+            } catch (error) {
+                console.error(error);
+                messageEl.textContent = 'Error occurred during fetch.';
+                messageEl.className = 'error';
+            }
+        });
+
+        document.getElementById('updateUserForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = 'Updating...';
+            messageEl.className = '';
+
+            const requestBody = {
+                id: document.getElementById('userId').value,
+                username: document.getElementById('username').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                mobile: document.getElementById('mobile').value,
+                dob: document.getElementById('dob').value,
+                gender: document.getElementById('gender').value,
+                dpUrl: document.getElementById('dpUrl').value,
+                address: document.getElementById('address').value
+            };
+
+            try {
+                const response = await fetch('/updateUser', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(requestBody)
+                });
+
+                if (response.ok) {
+                    const updatedUser = await response.json();
+                    messageEl.textContent = `User ${updatedUser.username} updated successfully!`;
+                    messageEl.className = 'success';
+                } else {
+                    messageEl.textContent = "Failed to update user.";
+                    messageEl.className = 'error';
+                }
+            } catch (error) {
+                console.error(error);
+                messageEl.textContent = "Error occurred while updating.";
+                messageEl.className = 'error';
+            }
+        });
+    </script>
+</body>
+
+</html>

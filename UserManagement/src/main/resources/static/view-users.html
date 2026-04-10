@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View All Users</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: #334155;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            color: #64748b;
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.2s;
+        }
+
+        .back-btn:hover {
+            color: #4f46e5;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 48px;
+            margin-top: 20px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 8px;
+        }
+
+        .container {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 1000px;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 16px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 0.95rem;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            color: #475569;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        tr:hover {
+            background-color: #f8fafc;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+    <a href="users_manage.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Management</a>
+    <div class="header">
+        <h1>View All Users</h1>
+        <p>List of all registered users</p>
+    </div>
+    <div class="container">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Photo</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Mobile</th>
+                    <th>DOB</th>
+                    <th>Gender</th>
+                    <th>Address</th>
+                </tr>
+            </thead>
+            <tbody id="userTableBody">
+                <tr>
+                    <td colspan="8" class="loading">Loading users...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const tableBody = document.getElementById('userTableBody');
+            try {
+                const response = await fetch('/viewAllUsers');
+                if (response.ok) {
+                    const users = await response.json();
+                    tableBody.innerHTML = ''; // clear loading text
+                    
+                    if(users.length === 0) {
+                        tableBody.innerHTML = '<tr><td colspan="8" style="text-align: center;">No users found.</td></tr>';
+                        return;
+                    }
+
+                    users.forEach(user => {
+                        const tr = document.createElement('tr');
+                        const photoHtml = user.dpUrl ? `<img src="${user.dpUrl}" alt="Photo" style="width:40px; height:40px; border-radius:50%; object-fit:cover;">` : '<div style="width:40px; height:40px; border-radius:50%; background-color:#e2e8f0; display:flex; align-items:center; justify-content:center;"><i class="fa-solid fa-user" style="color:#94a3b8;"></i></div>';
+                        tr.innerHTML = `
+                            <td>${user.id}</td>
+                            <td>${photoHtml}</td>
+                            <td>${user.username}</td>
+                            <td>${user.email}</td>
+                            <td>${user.mobile}</td>
+                            <td>${user.dob}</td>
+                            <td>${user.gender}</td>
+                            <td>${user.address || ''}</td>
+                        `;
+                        tableBody.appendChild(tr);
+                    });
+                } else {
+                    tableBody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: red;">Failed to load users</td></tr>';
+                }
+            } catch(error) {
+                console.error(error);
+                tableBody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: red;">Error connecting to server</td></tr>';
+            }
+        });
+    </script>
+</body>
+</html>
